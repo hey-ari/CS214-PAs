@@ -1,3 +1,8 @@
+/* DISCLAIMER: CREATED BY ARIADNA SHAMRAEVA FOR SELF-STUDY PURPOSES ONLY.
+NOBODY HAS PERMISSION TO COPY AND REUSE ANY MATERIALS IN THE CURRENT REPOSITORY. 
+COPYING ANY PARTS OF THIS ASSIGNMENT IS CONSIDERED PLAGIARISM AT CSU AND OTHER INSTITUTIONS.
+    VIOLATORS WILL BE RESPONSIBLE IN FULL AND FACE CONSEQUENCES SPECIFIED BY THE INSTITUTION.*/
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
@@ -33,7 +38,7 @@ public class PA2 {
         }
     }
 
-    // Adapted from initial code: Method to read song titles from a file, ensuring no title is empty
+    // Adapted from initial code: Method to read song titles from a file, ensuring no title is empty  *created by Ariadna Shamraeva for CSU. reuse is not permitted*
     private static List<String> readSongTitles(String fileName) throws Exception {
         List<String> songTitles = new ArrayList<>();
         try (Scanner scanner = new Scanner(new File(fileName))) {
@@ -68,7 +73,7 @@ public class PA2 {
                 for (String token : tokens) {
                     int rating = Integer.parseInt(token);
                     if (rating < 1 || rating > 5) {
-                        throw new Exception("Error: Invalid rating found in " + fileName + " with value " + rating);
+                        throw new Exception("Error: Invalid rating found in " + fileName + " with value " + rating); // created by Ariadna Shamraeva for CSU. reuse is not permitted.
                     }
                     songRating.add(rating);
                 }
@@ -84,7 +89,7 @@ public class PA2 {
         return ratings;
     }
 
-    // Adapted from initial code: Writes song statistics to an output file without formatting the results
+    // Adapted from initial code: Writes song statistics to an output file without formatting the results  *created by Ariadna Shamraeva for CSU. reuse is not permitted*
     private static void writeSongStatistics(List<String> songTitles, List<List<Integer>> songRatings, String outputFileName) throws FileNotFoundException {
         try (PrintWriter writer = new PrintWriter(outputFileName)) {
             for (int i = 0; i < songTitles.size(); i++) {
