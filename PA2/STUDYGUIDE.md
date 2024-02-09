@@ -1,6 +1,6 @@
 // DISCLAIMER: CREATED BY ARIADNA SHAMRAEVA FOR SELF-STUDY PURPOSES ONLY. NOBODY HAS PERMISSION TO COPY AND REUSE ANY MATERIALS IN THE CURRENT REPOSITORY. COPYING ANY PARTS OF THIS ASSIGNMENT IS CONSIDERED PLAGIARISM AT CSU AND OTHER INSTITUTIONS. VIOLATORS WILL BE RESPONSIBLE IN FULL AND FACE CONSEQUENCES SPECIFIED BY THE INSTITUTION.  
 
-Creating a comprehensive study guide for the Java program and JUnit tests developed in our session involves several components: understanding the program's functionality, writing effective JUnit tests, and managing the project with Gradle. This guide will delve into the specifics of each aspect, providing insights and explanations to enhance understanding.
+
 
 ## Understanding the Java Program
 **Objective**
