@@ -1,3 +1,9 @@
+/* DISCLAIMER: CREATED BY ARIADNA SHAMRAEVA FOR SELF-STUDY PURPOSES ONLY.
+NOBODY HAS PERMISSION TO COPY AND REUSE ANY MATERIALS IN THE CURRENT REPOSITORY. 
+COPYING ANY PARTS OF THIS ASSIGNMENT IS CONSIDERED PLAGIARISM AT CSU AND OTHER INSTITUTIONS.
+VIOLATORS WILL BE RESPONSIBLE IN FULL AND FACE CONSEQUENCES SPECIFIED BY THE INSTITUTION.*/
+
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,7 +31,7 @@ public class TestPA2 {
 
     @BeforeEach
     void setUp() throws IOException {
-        // Initialize temporary files for song titles, ratings, and output before each test
+        // Initialize temporary files for song titles, ratings, and output before each test   *created by Ariadna Shamraeva for CSU. reuse is not permitted*
         titlesFile = tempDir.resolve("titles.txt").toFile();
         ratingsFile = tempDir.resolve("ratings.txt").toFile();
         outputFile = tempDir.resolve("output.txt").toFile();
@@ -58,7 +64,7 @@ public class TestPA2 {
             String songOneOutput = scanner.nextLine().trim();
             String songTwoOutput = scanner.nextLine().trim();
             
-            // Adjust these assertions based on the expected output format and values.
+            // Adjust these assertions based on the expected output format and values. *created by Ariadna Shamraeva for CSU. reuse is not permitted*
             assertEquals("Expected output for Song One", songOneOutput, "Song One 3.00 1.41");
             assertEquals("Expected output for Song Two", songTwoOutput, "Song Two 3.00 1.41");
         }
@@ -103,7 +109,7 @@ public class TestPA2 {
     });
     
       // Verify that the exception or error message indicates the problem with the ratings file
-      // Adjust the assertion based on the actual exception message or error handling in your program
+      // Adjust the assertion based on the actual exception message or error handling in your program  *created by Ariadna Shamraeva for CSU. reuse is not permitted*
       assertTrue(exception.getMessage().contains("Error: The ratings file is empty"), "The program should indicate the ratings file is empty.");
     }
 
@@ -144,7 +150,7 @@ public class TestPA2 {
       writer.println("5 4 3 2 1");
       writer.close();
     
-      // Run the program and expect an exception or specific behavior
+      // Run the program and expect an exception or specific behavior  *created by Ariadna Shamraeva for CSU. reuse is not permitted*
       Exception exception = assertThrows(Exception.class, () -> {
         PA2.main(new String[]{titlesFile.getAbsolutePath(), ratingsFile.getAbsolutePath(), outputFile.getAbsolutePath()});
       });
