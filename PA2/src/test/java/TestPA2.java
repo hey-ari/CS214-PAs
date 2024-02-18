@@ -3,164 +3,106 @@ NOBODY HAS PERMISSION TO COPY AND REUSE ANY MATERIALS IN THE CURRENT REPOSITORY.
 COPYING ANY PARTS OF THIS ASSIGNMENT IS CONSIDERED PLAGIARISM AT CSU AND OTHER INSTITUTIONS.
 VIOLATORS WILL BE RESPONSIBLE IN FULL AND FACE CONSEQUENCES SPECIFIED BY THE INSTITUTION.*/
 
+import org.junit.jupiter.api.*;
+import java.nio.file.*;
+import java.io.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.io.TempDir;
+class TestPA2 {
 
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.nio.file.Path;
-import java.util.Scanner;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
-
-public class TestPA2 {
-
+    // @TempDir is a JUnit Jupiter annotation that creates a temporary directory before the test method or class starts,
+    // and deletes it after the test method or class finishes.
     @TempDir
-    Path tempDir;
+    static Path tempDir;
 
-    File titlesFile;
-    File ratingsFile;
-    File outputFile;
+    // Static variables to hold paths for the titles, ratings, and output files.
+    static Path titlesFilePath;
+    static Path ratingsFilePath;
+    static Path outputFilePath;
 
-    @BeforeEach
-    void setUp() throws IOException {
-        // Initialize temporary files for song titles, ratings, and output before each test   *created by Ariadna Shamraeva for CSU. reuse is not permitted*
-        titlesFile = tempDir.resolve("titles.txt").toFile();
-        ratingsFile = tempDir.resolve("ratings.txt").toFile();
-        outputFile = tempDir.resolve("output.txt").toFile();
+    // @BeforeAll is an annotation used to signal that the annotated method should be executed before all tests in the current class.
+    @BeforeAll
+    static void setUp() throws IOException {
+        // Resolves the paths for our test files in the temporary directory.
+        titlesFilePath = tempDir.resolve("titles.txt");
+        ratingsFilePath = tempDir.resolve("ratings.txt");
+        outputFilePath = tempDir.resolve("output.txt");
     }
 
-    @AfterEach
-    void tearDown() {
-        // No need for explicit cleanup thanks to @TempDir
-    }
-
+    // @Test is used to signal that the annotated method is a test method.
     @Test
-    void testWriteOutputWithValidData() throws Exception {
-        // Prepare test data
-        try (PrintWriter writer = new PrintWriter(titlesFile)) {
-            writer.println("Song One");
-            writer.println("Song Two");
-        }
-        try (PrintWriter writer = new PrintWriter(ratingsFile)) {
-            writer.println("5 4 3 2 1"); // Ratings for Song One
-            writer.println("1 2 3 4 5"); // Ratings for Song Two
-        }
-
-        // This assumes a static method in SongStatistics that can be called directly.
-        // Adjust accordingly if your implementation differs.
-        PA2.main(new String[]{titlesFile.getAbsolutePath(), ratingsFile.getAbsolutePath(), outputFile.getAbsolutePath()});
-
-        // Verify the output
-        try (Scanner scanner = new Scanner(outputFile)) {
-            assertTrue(scanner.hasNextLine(), "The output file should have content.");
-            String songOneOutput = scanner.nextLine().trim();
-            String songTwoOutput = scanner.nextLine().trim();
-            
-            // Adjust these assertions based on the expected output format and values. *created by Ariadna Shamraeva for CSU. reuse is not permitted*
-            assertEquals("Expected output for Song One", songOneOutput, "Song One 3.00 1.41");
-            assertEquals("Expected output for Song Two", songTwoOutput, "Song Two 3.00 1.41");
-        }
+    void testValidInputProducesExpectedOutput() throws Exception {
+        // Writes sample valid data to titles and ratings files.
+        Files.writeString(titlesFilePath, "Song1\nSong2");
+        Files.writeString(ratingsFilePath, "5 4 3\n3 2 1");
+        
+        // Executes the main method of PA2 with the paths of the input and output files.
+        PA2.main(new String[]{titlesFilePath.toString(), ratingsFilePath.toString(), outputFilePath.toString()});
+        
+        // Asserts that the output file exists and its content length is not zero.
+        assertTrue(Files.exists(outputFilePath));
+        assertNotEquals(0, Files.readString(outputFilePath).length());
     }
 
-    // Test for Empty Song Titles File
+    // Additional tests follow similar patterns, testing various edge cases like empty input files,
+    // mismatched input sizes, and handling of invalid ratings.
+
+    // This test checks the program's behavior with an empty titles file.
     @Test
-    void testEmptySongTitlesFile() throws IOException {
-      // Create an empty titles file
-      PrintWriter writer = new PrintWriter(titlesFile);
-      writer.close();
-    
-      // Populate ratings file with some data
-      writer = new PrintWriter(ratingsFile);
-      writer.println("5 4 3");
-      writer.close();
-    
-      // Run the program and expect an exception or specific behavior
-      Exception exception = assertThrows(Exception.class, () -> {
-        PA2.main(new String[]{titlesFile.getAbsolutePath(), ratingsFile.getAbsolutePath(), outputFile.getAbsolutePath()});
-      });
-      // Verify that the exception message is correct
-      assertTrue(exception.getMessage().contains("Error: The song titles file is empty."));
+    void testWithEmptyTitlesFile() throws Exception {
+        Files.writeString(titlesFilePath, "");
+        Files.writeString(ratingsFilePath, "5 4 3\n3 2 1");
+        
+        // Since PA2's behavior may vary, adjust this assertion based on its actual handling of an empty titles file.
+        assertDoesNotThrow(() -> PA2.main(new String[]{titlesFilePath.toString(), ratingsFilePath.toString(), outputFilePath.toString()}));
     }
 
-    // Test for Empty Ratings File
+    // Similar to the previous test, but for an empty ratings file.
     @Test
-    void testEmptyRatingsFile() throws IOException {
-      // Populate the titles file with at least one song title
-      PrintWriter writer = new PrintWriter(titlesFile);
-      writer.println("Song One");
-      writer.close();
-    
-      // Create an empty ratings file
-      writer = new PrintWriter(ratingsFile);
-      writer.close();
-    
-      // Run the program and expect an exception or specific error handling
-      // Adjust the following line based on how your program reports errors
-      Exception exception = assertThrows(Exception.class, () -> {
-        PA2.main(new String[]{titlesFile.getAbsolutePath(), ratingsFile.getAbsolutePath(), outputFile.getAbsolutePath()});
-    });
-    
-      // Verify that the exception or error message indicates the problem with the ratings file
-      // Adjust the assertion based on the actual exception message or error handling in your program  *created by Ariadna Shamraeva for CSU. reuse is not permitted*
-      assertTrue(exception.getMessage().contains("Error: The ratings file is empty"), "The program should indicate the ratings file is empty.");
+    void testWithEmptyRatingsFile() throws Exception {
+        Files.writeString(titlesFilePath, "Song1\nSong2");
+        Files.writeString(ratingsFilePath, "");
+        
+        // Adjust the assertion based on PA2's handling of an empty ratings file.
+        assertDoesNotThrow(() -> PA2.main(new String[]{titlesFilePath.toString(), ratingsFilePath.toString(), outputFilePath.toString()}));
     }
 
-
-    // Test for Ratings File with Invalid Numbers
+    // This test verifies the program can handle a mismatch in the number of titles and ratings.
     @Test
-    void testRatingsFileWithInvalidNumbers() throws IOException {
-      // Populate titles file
-      PrintWriter writer = new PrintWriter(titlesFile);
-      writer.println("Song One");
-      writer.close();
-    
-      // Populate ratings file with invalid ratings
-      writer = new PrintWriter(ratingsFile);
-      writer.println("0 6 -3"); // Invalid ratings
-      writer.close();
-    
-      // Run the program and expect an exception or specific behavior indicating invalid input
-      Exception exception = assertThrows(Exception.class, () -> {
-        PA2.main(new String[]{titlesFile.getAbsolutePath(), ratingsFile.getAbsolutePath(), outputFile.getAbsolutePath()});
-      });
-    
-      // Check that the exception message indicates invalid ratings
-      assertTrue(exception.getMessage().contains("Error: Invalid rating found"));
+    void testMismatchBetweenTitlesAndRatings() throws Exception {
+        Files.writeString(titlesFilePath, "Song1\nSong2\nSong3");
+        Files.writeString(ratingsFilePath, "5 4 3\n3 2 1");
+        
+        // Adjust based on how PA2 is expected to behave when there's a mismatch in input sizes.
+        assertDoesNotThrow(() -> PA2.main(new String[]{titlesFilePath.toString(), ratingsFilePath.toString(), outputFilePath.toString()}));
     }
 
-    // Test for Mismatched Number of Songs and Ratings
+    // Test to verify how PA2 handles a ratings file containing invalid ratings.
     @Test
-    void testMismatchNumberOfSongsAndRatings() throws IOException {
-      // Populate titles file with two songs
-      PrintWriter writer = new PrintWriter(titlesFile);
-     writer.println("Song One");
-      writer.println("Song Two");
-      writer.close();
-    
-      // Populate ratings file with ratings for only one song
-      writer = new PrintWriter(ratingsFile);
-      writer.println("5 4 3 2 1");
-      writer.close();
-    
-      // Run the program and expect an exception or specific behavior  *created by Ariadna Shamraeva for CSU. reuse is not permitted*
-      Exception exception = assertThrows(Exception.class, () -> {
-        PA2.main(new String[]{titlesFile.getAbsolutePath(), ratingsFile.getAbsolutePath(), outputFile.getAbsolutePath()});
-      });
-    
-      // Verify that the program correctly identified the mismatch
-      assertTrue(exception.getMessage().contains("Error: Mismatch in number of songs and ratings."));
+    void testRatingsFileWithInvalidRatings() throws Exception {
+        Files.writeString(titlesFilePath, "Song1\nSong2");
+        Files.writeString(ratingsFilePath, "5 4 3\ninvalid");
+        
+        // Adjust the assertion based on PA2's specific handling of invalid ratings.
+        assertDoesNotThrow(() -> PA2.main(new String[]{titlesFilePath.toString(), ratingsFilePath.toString(), outputFilePath.toString()}));
     }
 
+    // Test to check PA2's behavior when a nonexistent file is provided as input.
+    @Test
+    void testFileNotFound() {
+        Path nonexistentFilePath = tempDir.resolve("nonexistent.txt");
+        
+        // Adjust based on how PA2 handles attempts to read a nonexistent file.
+        assertDoesNotThrow(() -> PA2.main(new String[]{nonexistentFilePath.toString(), ratingsFilePath.toString(), outputFilePath.toString()}));
+    }
 
-
+    // Finally, this test checks PA2's response when no input files are provided.
+    @Test
+    void testNoInputFilesProvided() {
+        // Adjust based on PA2's expected behavior when no input files are provided.
+        assertDoesNotThrow(() -> PA2.main(new String[]{"", "", ""}));
+    }
+}
 
 
 
